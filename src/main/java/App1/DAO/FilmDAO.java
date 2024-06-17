@@ -2,11 +2,12 @@ package App1.DAO;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
+import App1.Entite.Acteur;
 import App1.Entite.Film;
 import App1.Util.Convertion;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 
 public class FilmDAO {
@@ -16,11 +17,9 @@ public class FilmDAO {
 		while (iterator.hasNext()) {
 			String ligneCourante = iterator.next();
 			String[] tab = ligneCourante.split(";", -1);
-			EntityTransaction transaction = em.getTransaction();
 			List<Film> films = extractingFilms(em);
 			// verifier que le film d'existe pas encore dans la base
 			if (!isFilmInDB(films, tab[1])) {
-				transaction.begin();
 				Film film = new Film(tab[1]);
 				film.setIdImdb(tab[0]);
 				if ((tab[2] != "") && (tab[2] != " ") && (tab[2].length() >= 11)) {
@@ -37,7 +36,6 @@ public class FilmDAO {
 				PaysDAO.setPaysByName(tab[9].trim(), em);
 
 				em.persist(film);
-				transaction.commit();
 			}
 		}
 	}
@@ -51,10 +49,61 @@ public class FilmDAO {
 		return false;
 	}
 
-	private static List<Film> extractingFilms(EntityManager em) {
+	static List<Film> extractingFilms(EntityManager em) {
 		TypedQuery<Film> query = em.createQuery("SELECT a From Film a", Film.class);
 		List<Film> liste = query.getResultList();
 		return liste;
+	}
+
+	public static boolean isFilmInDBByImdbId(List<Film> films, String string) {
+		for (Film item : films) {
+			if (item.getIdImdb().equals(string)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static Film getFilmByImdbId(List<Film> films, String string) {
+		Film film = new Film();
+		for (Film item : films) {
+			if (item.getIdImdb().equals(string)) {
+				film = item;
+			}
+		}
+		return film;
+	}
+
+	public static void linkFilmToActeurFromList(List<String> listeCasting, EntityManager em) {
+		Iterator<String> iterator = listeCasting.iterator();
+		while (iterator.hasNext()) {
+			String ligneCourante = iterator.next();
+			String[] tab = ligneCourante.split(";", -1);
+			List<Acteur> acteurs = ActeurDAO.extractingActeurs(em);
+			List<Film> films = extractingFilms(em);
+			if (isFilmInDBByImdbId(films, tab[0])) {
+				Film film = getFilmByImdbId(films, tab[0]);
+				if (ActeurDAO.isActeurInDBByImdbId(acteurs, tab[1])) {
+					Acteur acteur = ActeurDAO.getActeurByImdbId(acteurs, tab[1]);
+					if (!isFilmLinkedToActeur(acteur, film)) {
+						Set<Acteur> casting = film.getCasting();
+						casting.add(acteur);
+						film.setCasting(casting);
+					}
+				}
+				em.persist(film);
+
+			}
+		}
+	}
+
+	private static boolean isFilmLinkedToActeur(Acteur acteur, Film film) {
+		Set<Film> films = acteur.getFilms();
+		if (films.contains(film)) {
+			return true;
+		}
+
+		return false;
 	}
 
 }

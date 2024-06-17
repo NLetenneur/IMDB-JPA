@@ -21,7 +21,7 @@ public class RoleDAO {
 			if (!isRoleInDB(roles, tab)) {
 				try {
 					Film film = Film.getFilmByIMDB(tab[0], em);
-					Acteur acteur = Acteur.getActeurByIMDB(tab[1], em);
+					Acteur acteur = ActeurDAO.getActeurByIMDB(tab[1], em);
 					Role role = new Role(film, acteur, tab[2]);
 					em.persist(role);
 				} catch (DataMissingException e) {

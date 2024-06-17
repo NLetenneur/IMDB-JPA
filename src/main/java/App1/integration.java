@@ -13,6 +13,7 @@ import App1.DAO.RoleDAO;
 import App1.Reader.Reader;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 
 public class integration {
@@ -34,7 +35,11 @@ public class integration {
 		boolean existsRoles = Files.exists(fichierRoles);
 		Path fichierFilmReal = home.resolve("./film_realisateurs.csv");
 		boolean existsFilmReal = Files.exists(fichierFilmReal);
-		
+		Path fichierCasting = home.resolve("./castingPrincipal.csv");
+		boolean existsCasting = Files.exists(fichierCasting);
+		EntityTransaction transaction = em.getTransaction();
+		transaction.begin();
+
 		
 		if (existsPays) {
 			List <String> listePays = Reader.readFile(fichierPays, em);
@@ -61,10 +66,15 @@ public class integration {
 			RoleDAO.setRolesFromList(listeRoles, em);
 		}
 		
-//		if(existsFilmReal) {
-//			List <String> listeFilmReal = Reader.readFile(fichierFilmReal, em);
-//			
-//		}
+		if(existsFilmReal) {
+			List <String> listeFilmReal = Reader.readFile(fichierFilmReal, em);
+			RealisateurDAO.linkFilmToRealFromList(listeFilmReal, em);
+		}
+		if(existsCasting) {
+			List <String> listeCasting = Reader.readFile(fichierCasting, em);
+			FilmDAO.linkFilmToActeurFromList(listeCasting, em);
+		}
+		transaction.commit();
 		em.close();
 	}
 

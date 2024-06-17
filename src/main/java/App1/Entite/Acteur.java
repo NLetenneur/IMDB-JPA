@@ -1,18 +1,14 @@
 package App1.Entite;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import App1.Exception.DataMissingException;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.TypedQuery;
 
 @Entity
 @Table(name = "ACTEUR")
@@ -23,11 +19,6 @@ public class Acteur extends Personne {
 
 	@OneToMany(mappedBy = "acteur")
 	private Set<Role> roles = new HashSet<>();
-
-	@ManyToMany
-	@JoinTable(name = "CASTING", joinColumns = { @JoinColumn(name = "id_acteur") }, inverseJoinColumns = {
-			@JoinColumn(name = "id_film") })
-	private Set<Film> films = new HashSet<>();
 
 	/**
 	 * Constructor
@@ -70,23 +61,32 @@ public class Acteur extends Personne {
 	}
 
 	/**
-	 *Retourne un acteur à partir d'un ID IMDB
-	 * @throws DataMissingException 
+	 * Retourne un acteur à partir d'un ID IMDB
+	 * 
+	 * @throws DataMissingException
 	 */
-	public static Acteur getActeurByIMDB(String string, EntityManager em) throws DataMissingException {
-		TypedQuery<Acteur> query = em.createQuery("SELECT a From Acteur a", Acteur.class);
-		List<Acteur> liste = query.getResultList();
-		Acteur acteur = new Acteur();
-		for (Acteur item : liste) {
-			if (item.getIdImdb().equals(string)) {
-				acteur = item;
-				em.persist(acteur);
-			}
-		}
-		if (acteur.getId()==null) {
-			throw new DataMissingException("L'acteur n'existe pas");
-		}
-		return acteur;
+
+	/**
+	 * Getter pour films
+	 * 
+	 * @return films
+	 */
+	public Set<Film> getFilms() {
+		return films;
 	}
+
+	/**
+	 * Setter pour films
+	 * 
+	 * @param films films
+	 */
+	public void setFilms(Set<Film> films) {
+		this.films = films;
+	}
+
+	@ManyToMany
+	@JoinTable(name = "CASTING", joinColumns = { @JoinColumn(name = "id_acteur") }, inverseJoinColumns = {
+			@JoinColumn(name = "id_film") })
+	private Set<Film> films = new HashSet<>();
 
 }

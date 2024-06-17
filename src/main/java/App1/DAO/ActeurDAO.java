@@ -4,9 +4,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import App1.Entite.Acteur;
+import App1.Exception.DataMissingException;
 import App1.Util.Convertion;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 
 public class ActeurDAO {
@@ -16,11 +16,9 @@ public class ActeurDAO {
 		while (iterator.hasNext()) {
 			String ligneCourante = iterator.next();
 			String[] tab = ligneCourante.split(";", -1);
-			EntityTransaction transaction = em.getTransaction();
 			List<Acteur> acteurs = extractingActeurs(em);
 			// verifier que l'acteur d'existe pas encore dans la base
 			if (!isActeurInDB(acteurs, tab[1])) {
-				transaction.begin();
 				Acteur acteur = new Acteur(tab[1]);
 				acteur.setIdImdb(tab[0]);
 				if ((tab[2] != "") && (tab[2] != " ") && (tab[2].length() >= 11)) {
@@ -32,8 +30,6 @@ public class ActeurDAO {
 				}
 				acteur.setURL(tab[5]);
 				em.persist(acteur);
-				transaction.commit();
-
 			}
 		}
 
@@ -48,11 +44,45 @@ public class ActeurDAO {
 		return false;
 	}
 
-	private static List<Acteur> extractingActeurs(EntityManager em) {
+	static List<Acteur> extractingActeurs(EntityManager em) {
 		TypedQuery<Acteur> query = em.createQuery("SELECT a From Acteur a", Acteur.class);
 		List<Acteur> liste = query.getResultList();
 		return liste;
 
 	}
+
+	public static boolean isActeurInDBByImdbId(List<Acteur> acteurs, String string) {
+		for (Acteur item : acteurs) {
+			if (item.getIdImdb().equals(string)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static Acteur getActeurByImdbId(List<Acteur> acteurs, String string) {
+		Acteur acteur = new Acteur();
+		for (Acteur item : acteurs) {
+			if (item.getIdImdb().equals(string)) {
+				acteur= item;
+			}		
+	}return acteur;
+
+	}
+	public static Acteur getActeurByIMDB(String string, EntityManager em) throws DataMissingException {
+		TypedQuery<Acteur> query = em.createQuery("SELECT a From Acteur a", Acteur.class);
+		List<Acteur> liste = query.getResultList();
+		Acteur acteur = new Acteur();
+		for (Acteur item : liste) {
+			if (item.getIdImdb().equals(string)) {
+				acteur = item;
+				em.persist(acteur);
+			}
+		}
+		if (acteur.getId()==null) {
+			throw new DataMissingException("L'acteur n'existe pas");
+		}
+		return acteur;
+	}	
 
 }
