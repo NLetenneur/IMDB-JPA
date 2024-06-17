@@ -1,18 +1,22 @@
 package App1.Entite;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import App1.Exception.DataMissingException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.TypedQuery;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -30,11 +34,12 @@ public class Film {
 	@Column(name = "id_imdb")
 	private String idImdb;
 
-	@Column(name = "imdb_href")
+	@Column(name = "URL")
 	private String URL;
 	private String nom;
 	private Integer annee;
 	private double rating;
+	@Column(length = 1024)
 	private String resume;
 
 	@OneToMany(mappedBy = "film")
@@ -58,6 +63,10 @@ public class Film {
 	@ManyToOne
 	@JoinColumn(name = "ID_PAYS")
 	private Pays pays;
+
+	@ManyToOne
+	@JoinColumn(name = "ID_LieuTournage")
+	private Lieu lieuTournage;
 
 	@ManyToOne
 	@JoinColumn(name = "ID_LANGUE")
@@ -282,10 +291,10 @@ public class Film {
 	/**
 	 * Setter pour genres
 	 * 
-	 * @param genres genres
+	 * @param genre genres
 	 */
-	public void setGenres(Set<Genre> genres) {
-		this.genres = genres;
+	public void setGenres(Set<Genre> genre) {
+		this.genres = genre;
 	}
 
 	/**
@@ -340,6 +349,44 @@ public class Film {
 	 */
 	public void setLangue(Langue langue) {
 		this.langue = langue;
+	}
+
+	/**
+	 * Getter pour lieuTournage
+	 * 
+	 * @return lieuTournage
+	 */
+	public Lieu getLieuTournage() {
+		return lieuTournage;
+	}
+
+	/**
+	 * Setter pour lieuTournage
+	 * 
+	 * @param lieuTournage lieuTournage
+	 */
+	public void setLieuTournage(Lieu lieuTournage) {
+		this.lieuTournage = lieuTournage;
+	}
+
+	/**
+	 * Retourne un film à partir d'un ID IMDB
+	 * @throws DataMissingException 
+	 */
+	public static Film getFilmByIMDB(String string, EntityManager em) throws DataMissingException {
+		TypedQuery<Film> query = em.createQuery("SELECT a From Film a", Film.class);
+		List<Film> films = query.getResultList();
+		Film film = new Film();
+		for (Film item : films) {
+			if (item.getIdImdb().equals(string)) {
+				film = item;
+				em.persist(film);
+			}
+		}
+		if (film.getId() == null) {
+			throw new DataMissingException("Le film n'existe pas");
+		}
+		return film;
 	}
 
 }

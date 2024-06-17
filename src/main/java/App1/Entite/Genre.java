@@ -7,6 +7,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import java.util.List;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -77,5 +79,16 @@ public class Genre {
 	 */
 	public void setNom(String nom) {
 		this.nom = nom;
+	}
+
+	public static Genre getGenreByName(List<Genre> genres, String string) {
+		Genre genre = new Genre();
+		for (Genre item : genres) {
+			if (item.getNom().equals(string)) {
+				genre = item;
+			}
+		}
+
+		return genre;
 	}
 }

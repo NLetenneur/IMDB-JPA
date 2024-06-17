@@ -1,37 +1,25 @@
 package App1.Entite;
 
-import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-
-import jakarta.persistence.Column;
+import App1.Exception.DataMissingException;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.TypedQuery;
 
 @Entity
 @Table(name = "ACTEUR")
 
 public class Acteur extends Personne {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Long id;
-
-	@Column(name = "id_imdb")
-	private String idImdb;
-	private String identite;
-	private String URL;
-	private LocalDate dateNaissance;
+	private double taille;
 
 	@OneToMany(mappedBy = "acteur")
 	private Set<Role> roles = new HashSet<>();
@@ -47,7 +35,7 @@ public class Acteur extends Personne {
 	 * @param identite
 	 */
 	public Acteur(String identite) {
-		this.identite = identite;
+		super(identite);
 	}
 
 	/**
@@ -58,149 +46,47 @@ public class Acteur extends Personne {
 		super();
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof Acteur)) {
-			return false;
-		}
-		Acteur other = (Acteur) obj;
-		return new EqualsBuilder().append(idImdb, other.getIdImdb()).isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return "id=" + idImdb + ", identite=" + identite + ", anniversaire=" + dateNaissance;
-	}
-
 	public void addRole(Role role) {
 		roles.add(role);
 
 	}
 
 	/**
-	 * Getter pour id
+	 * Getter pour taille
 	 * 
-	 * @return id
+	 * @return taille
 	 */
-	public Long getId() {
-		return id;
+	public double getTaille() {
+		return taille;
 	}
 
 	/**
-	 * Setter pour id
+	 * Setter pour taille
 	 * 
-	 * @param id id
+	 * @param taille taille
 	 */
-	public void setId(Long id) {
-		this.id = id;
+	public void setTaille(double taille) {
+		this.taille = taille;
 	}
 
 	/**
-	 * Getter pour idImdb
-	 * 
-	 * @return idImdb
+	 *Retourne un acteur à partir d'un ID IMDB
+	 * @throws DataMissingException 
 	 */
-	public String getIdImdb() {
-		return idImdb;
-	}
-
-	/**
-	 * Setter pour idImdb
-	 * 
-	 * @param idImdb idImdb
-	 */
-	public void setIdImdb(String idImdb) {
-		this.idImdb = idImdb;
-	}
-
-	/**
-	 * Getter pour identite
-	 * 
-	 * @return identite
-	 */
-	public String getIdentite() {
-		return identite;
-	}
-
-	/**
-	 * Setter pour identite
-	 * 
-	 * @param identite identite
-	 */
-	public void setIdentite(String identite) {
-		this.identite = identite;
-	}
-
-	/**
-	 * Getter pour uRL
-	 * 
-	 * @return uRL
-	 */
-	public String getURL() {
-		return URL;
-	}
-
-	/**
-	 * Setter pour uRL
-	 * 
-	 * @param uRL uRL
-	 */
-	public void setURL(String uRL) {
-		URL = uRL;
-	}
-
-	/**
-	 * Getter pour dateNaissance
-	 * 
-	 * @return dateNaissance
-	 */
-	public LocalDate getDateNaissance() {
-		return dateNaissance;
-	}
-
-	/**
-	 * Setter pour dateNaissance
-	 * 
-	 * @param dateNaissance dateNaissance
-	 */
-	public void setDateNaissance(LocalDate dateNaissance) {
-		this.dateNaissance = dateNaissance;
-	}
-
-	/**
-	 * Getter pour roles
-	 * 
-	 * @return roles
-	 */
-	public Set<Role> getRoles() {
-		return roles;
-	}
-
-	/**
-	 * Setter pour roles
-	 * 
-	 * @param roles roles
-	 */
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
-	}
-
-	/**
-	 * Getter pour films
-	 * 
-	 * @return films
-	 */
-	public Set<Film> getFilms() {
-		return films;
-	}
-
-	/**
-	 * Setter pour films
-	 * 
-	 * @param films films
-	 */
-	public void setFilms(Set<Film> films) {
-		this.films = films;
+	public static Acteur getActeurByIMDB(String string, EntityManager em) throws DataMissingException {
+		TypedQuery<Acteur> query = em.createQuery("SELECT a From Acteur a", Acteur.class);
+		List<Acteur> liste = query.getResultList();
+		Acteur acteur = new Acteur();
+		for (Acteur item : liste) {
+			if (item.getIdImdb().equals(string)) {
+				acteur = item;
+				em.persist(acteur);
+			}
+		}
+		if (acteur.getId()==null) {
+			throw new DataMissingException("L'acteur n'existe pas");
+		}
+		return acteur;
 	}
 
 }

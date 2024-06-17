@@ -1,6 +1,7 @@
 package App1.Entite;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -90,6 +91,16 @@ public class Langue {
 	 */
 	public void setFilms(Set<Film> films) {
 		this.films = films;
+	}
+
+	public static Langue getLangueByName(List<Langue> langues, String string) {
+		Langue langue = new Langue();
+		for (Langue item : langues) {
+			if (item.getNom().equals(string)) {
+				langue = item;
+			}
+		}
+		return langue;
 	}
 
 }

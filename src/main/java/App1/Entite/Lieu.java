@@ -1,5 +1,8 @@
 package App1.Entite;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -22,7 +26,15 @@ public class Lieu {
 	@ManyToOne
 	@JoinColumn(name = "ID_PAYS")
 	private Pays pays;
+	
+	@OneToMany(mappedBy = "lieuTournage")
+	private Set<Film> films = new HashSet<>();
+	
+	@OneToMany(mappedBy = "lieuNaissance")
+	private Set<Acteur> acteurs = new HashSet<>();
 
+	@OneToMany(mappedBy = "lieuNaissance")
+	private Set<Realisateur> realisateurs = new HashSet<>();
 	/**
 	 * Constructor
 	 * 

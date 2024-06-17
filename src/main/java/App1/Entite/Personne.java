@@ -2,16 +2,16 @@ package App1.Entite;
 
 import java.time.LocalDate;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "PERSONNE")
 @MappedSuperclass
 abstract class Personne {
 
@@ -19,9 +19,14 @@ abstract class Personne {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Long id;
+	private String idImdb;
 	private String identite;
 	private LocalDate dateNaissance;
 	private String URL;
+	
+	@ManyToOne
+	@JoinColumn(name = "ID_LieuNaiss")
+	private Lieu lieuNaissance;
 
 	/**
 	 * Constructor
@@ -37,6 +42,20 @@ abstract class Personne {
 	 * 
 	 */
 	public Personne() {
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Acteur)) {
+			return false;
+		}
+		Acteur other = (Acteur) obj;
+		return new EqualsBuilder().append(idImdb, other.getIdImdb()).isEquals();
+	}
+
+	@Override
+	public String toString() {
+		return "id=" + idImdb + ", identite=" + identite + ", anniversaire=" + dateNaissance;
 	}
 
 	/**
@@ -110,5 +129,34 @@ abstract class Personne {
 	public void setURL(String uRL) {
 		URL = uRL;
 	}
+
+	/** Getter pour idImdb
+	 * @return idImdb
+	 */
+	public String getIdImdb() {
+		return idImdb;
+	}
+
+	/**Setter pour idImdb
+	 * @param idImdb idImdb 
+	 */
+	public void setIdImdb(String idImdb) {
+		this.idImdb = idImdb;
+	}
+
+	/** Getter pour lieuNaissance
+	 * @return lieuNaissance
+	 */
+	public Lieu getLieuNaissance() {
+		return lieuNaissance;
+	}
+
+	/**Setter pour lieuNaissance
+	 * @param lieuNaissance lieuNaissance 
+	 */
+	public void setLieuNaissance(Lieu lieuNaissance) {
+		this.lieuNaissance = lieuNaissance;
+	}
+	
 
 }

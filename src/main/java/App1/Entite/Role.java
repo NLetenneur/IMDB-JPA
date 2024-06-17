@@ -43,9 +43,8 @@ public class Role {
 	 * @param film
 	 * @param acteur
 	 */
-	public Role(Long id, String personnage, Film film, Acteur acteur) {
-		super();
-		this.id = id;
+	public Role(Film film, Acteur acteur, String personnage) {
+
 		this.personnage = personnage;
 		this.film = film;
 		this.acteur = acteur;
