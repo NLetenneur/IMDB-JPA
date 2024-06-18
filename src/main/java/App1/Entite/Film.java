@@ -36,6 +36,7 @@ public class Film {
 
 	@Column(name = "URL")
 	private String URL;
+	@Column(length =1024)
 	private String nom;
 	private Integer annee;
 	private double rating;

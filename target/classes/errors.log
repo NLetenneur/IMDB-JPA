@@ -1,0 +1,8 @@
+91095 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Data truncation: Data too long for column 'nom' at row 1
+91095 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Data truncation: Data too long for column 'nom' at row 1
+84097 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Data truncation: Data too long for column 'nom' at row 1
+84097 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Data truncation: Data too long for column 'nom' at row 1
+95651 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Data truncation: Data too long for column 'nom' at row 1
+95651 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Data truncation: Data too long for column 'nom' at row 1
+195800 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Data truncation: Data too long for column 'nom' at row 1
+195800 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Data truncation: Data too long for column 'nom' at row 1

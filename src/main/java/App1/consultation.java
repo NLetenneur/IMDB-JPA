@@ -10,6 +10,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
+/**
+ *Permet de consulter la base de données à l'aide d'un menu 
+ */
 public class consultation {
 
 	public static void main(String[] args) {

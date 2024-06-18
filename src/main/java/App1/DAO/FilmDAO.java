@@ -22,6 +22,7 @@ public class FilmDAO {
 			List<Film> films = extractingFilms(em);
 			// verifier que le film d'existe pas encore dans la base
 			if (!isFilmInDB(films, tab[1])) {
+				System.out.println(tab[9]);
 				Film film = new Film(tab[1]);
 				film.setIdImdb(tab[0]);
 				if ((tab[2] != "") && (tab[2] != " ")) {

@@ -129,10 +129,17 @@ public class ActeurDAO {
 		return acteur;
 	}
 
-	public static void getActeursBetween2Films(String choix1, String choix2, EntityManager em) throws DataMissingException {
-		Film film1 = FilmDAO.getFilmsByNom(choix1, em);
-		Film film2 = FilmDAO.getFilmsByNom(choix2, em);
-		TypedQuery<Acteur> query = em.createQuery("SELECT a From Acteur a WHERE :film1 MEMBER OF a.films AND :film2 MEMBER OF a.film", Acteur.class);
+	public static void getActeursBetween2Films(String choix1, String choix2, EntityManager em)  {
+		Film film1=null;
+		Film film2=null;
+		try {
+			film1 = FilmDAO.getFilmsByNom(choix1, em);
+			film2 = FilmDAO.getFilmsByNom(choix2, em);
+		} catch (DataMissingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		TypedQuery<Acteur> query = em.createQuery("SELECT a From Acteur a JOIN a.roles r1 JOIN a.roles r2 WHERE r1.film=:film1 AND r2.film=:film2", Acteur.class);
 		query.setParameter("film1", film1);
 		query.setParameter("film2", film2);
 		List<Acteur> liste = query.getResultList();
@@ -141,7 +148,7 @@ public class ActeurDAO {
 
 		}
 		if(liste.size()==0) {
-			throw new DataMissingException("Il n'y a pas d'acteurs en communs entre ces films"); 
+			System.out.println("Il n'y a pas d'acteur en commun entre ces films"); 
 		}
 					
 	}

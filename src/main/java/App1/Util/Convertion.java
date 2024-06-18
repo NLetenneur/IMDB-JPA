@@ -8,7 +8,9 @@ public class Convertion {
 
 	public static LocalDate convertirStringEnDateUSA(String string) {
 		String dateATrimer = string.trim();
-		LocalDate date = LocalDate.parse(dateATrimer, DateTimeFormatter.ofPattern("MMMM d yyyy", Locale.US));
+		LocalDate date = null;
+		date = LocalDate.parse(dateATrimer, DateTimeFormatter.ofPattern("MMMM d yyyy", Locale.US));
+		
 		return date;
 	}
 
