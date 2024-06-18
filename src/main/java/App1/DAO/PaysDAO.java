@@ -22,7 +22,7 @@ public class PaysDAO {
 
 	public static void setPaysByName(String nom, EntityManager em) {
 		TypedQuery<Pays> query = em.createQuery("SELECT p From Pays p WHERE p.nom=:nom", Pays.class);
-		query.setParameter("nom", nom);
+		query.setParameter("nom", nom.trim());
 		List<Pays> resultat = query.getResultList();
 		// verifier que le pays d'existe pas encore dans la base
 		if (resultat.size() == 0) {
@@ -33,7 +33,7 @@ public class PaysDAO {
 
 	public static Pays getPaysByName(String string, EntityManager em) {
 		TypedQuery<Pays> query = em.createQuery("SELECT p From Pays p WHERE p.nom=:nom", Pays.class);
-		query.setParameter("nom", string);
+		query.setParameter("nom", string.trim());
 		List<Pays> resultat = query.getResultList();
 		// verifier que le pays d'existe pas encore dans la base
 		if (resultat.size() > 0) {
