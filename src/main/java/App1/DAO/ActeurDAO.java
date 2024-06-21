@@ -1,11 +1,13 @@
 package App1.DAO;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
 import App1.Entite.Acteur;
 import App1.Entite.Film;
+import App1.Entite.Role;
 import App1.Exception.DataMissingException;
 import App1.Util.Convertion;
 import jakarta.persistence.EntityManager;
@@ -151,6 +153,36 @@ public class ActeurDAO {
 			System.out.println("Il n'y a pas d'acteur en commun entre ces films"); 
 		}
 					
+	}
+	
+	public static List<Acteur> getChildren(Acteur acteur){
+		List<Acteur> children = new ArrayList<>();
+		for (Film item : acteur.getFilms()) {
+			for(Role item2 : item.getRoles()) {
+				children.add(item2.getActeur());
+			}
+		}
+		return children;
+	}
+
+	public static void getShorterPathBetween2Acteurs(String choix1, String choix2, EntityManager em) throws DataMissingException {
+		Acteur acteur1 = getActeurByName(choix1, em);
+		Acteur acteur2 = getActeurByName(choix2, em);
+		boolean pathCompleted= false;
+		int pathSize= -1;
+		List<Acteur> listeActeurs = getChildren(acteur1);
+		while (!pathCompleted) {
+			List<Acteur> nouvelleListeActeurs = new ArrayList<>();
+			for (Acteur item : listeActeurs) {
+				if (item.equals(acteur2)) {
+					pathCompleted=true;
+				}
+				nouvelleListeActeurs.addAll(getChildren(item));
+			}
+			pathSize++;
+			listeActeurs=nouvelleListeActeurs;
+		}
+		System.out.println("Il y a un chemin de "+pathSize+" acteurs ou actrices entre "+acteur1.getIdentite()+" et "+acteur2.getIdentite()+".");
 	}
 
 }

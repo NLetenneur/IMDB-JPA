@@ -26,7 +26,7 @@ public class Menu {
 		Menu menu4 = new Menu(4, " Afficher les films en commun à deux acteurs ou actrices");
 		Menu menu5 = new Menu(5, " Afficher les acteurs ou actrices en commun pour deux films donnés");
 		Menu menu6 = new Menu(6, " Afficher les films sorti entre deux années ayant un acteur ou une actrice au casting");
-		Menu menu7 = new Menu(7, " Afficher le chemin le plus court entre deux acteurs ou actrices");
+		Menu menu7 = new Menu(7, " Afficher la longueur du chemin le plus court entre deux acteurs ou actrices");
 		Menu menu8 = new Menu(8, " Fin de l'application");
 		menus=Arrays.asList(menu1, menu2, menu3, menu4, menu5, menu6, menu7, menu8);
 		return menus;

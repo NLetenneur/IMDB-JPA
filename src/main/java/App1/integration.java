@@ -27,7 +27,7 @@ public class integration {
 		boolean existsPays = Files.exists(fichierPays);
 		Path fichierReal = home.resolve("./realisateurs.csv");
 		boolean existsReal = Files.exists(fichierReal);
-		Path fichierActeurs = home.resolve("./acteurs.csv");
+		Path fichierActeurs = home.resolve("./acteursMini.csv");
 		boolean existsActeurs = Files.exists(fichierActeurs);
 		Path fichierFilms = home.resolve("./films.csv");
 		boolean existsFilms = Files.exists(fichierFilms);
@@ -41,35 +41,35 @@ public class integration {
 		transaction.begin();
 
 		
-//		if (existsPays) {
-//			List <String> listePays = Reader.readFile(fichierPays, em);
-//			PaysDAO.setPaysFromList(listePays, em);
-//		}
-//
-//		if (existsReal) {
-//			List <String> listeReal = Reader.readFile(fichierReal, em);
-//			RealisateurDAO.setRealisateursFromList(listeReal, em);
-//		}
+		if (existsPays) {
+			List <String> listePays = Reader.readFile(fichierPays, em);
+			PaysDAO.setPaysFromList(listePays, em);
+		}
 
-//		if (existsActeurs) {
-//			List <String> listeActeurs = Reader.readFile(fichierActeurs, em);
-//			ActeurDAO.setActeursFromList(listeActeurs, em);
-//		}
-//
-//		if (existsFilms) {
-//			List <String> listeFilms = Reader.readFile(fichierFilms, em);
-//			FilmDAO.setFilmsFromList(listeFilms, em);
-//		}
-//
-//		if (existsRoles) {
-//			List <String> listeRoles = Reader.readFile(fichierRoles, em);
-//			RoleDAO.setRolesFromList(listeRoles, em);
-//		}
-//		
-//		if(existsFilmReal) {
-//			List <String> listeFilmReal = Reader.readFile(fichierFilmReal, em);
-//			RealisateurDAO.linkFilmToRealFromList(listeFilmReal, em);
-//		}
+		if (existsReal) {
+			List <String> listeReal = Reader.readFile(fichierReal, em);
+			RealisateurDAO.setRealisateursFromList(listeReal, em);
+		}
+
+		if (existsActeurs) {
+			List <String> listeActeurs = Reader.readFile(fichierActeurs, em);
+			ActeurDAO.setActeursFromList(listeActeurs, em);
+		}
+
+		if (existsFilms) {
+			List <String> listeFilms = Reader.readFile(fichierFilms, em);
+			FilmDAO.setFilmsFromList(listeFilms, em);
+		}
+
+		if (existsRoles) {
+			List <String> listeRoles = Reader.readFile(fichierRoles, em);
+			RoleDAO.setRolesFromList(listeRoles, em);
+		}
+		
+		if(existsFilmReal) {
+			List <String> listeFilmReal = Reader.readFile(fichierFilmReal, em);
+			RealisateurDAO.linkFilmToRealFromList(listeFilmReal, em);
+		}
 		if(existsCasting) {
 			List <String> listeCasting = Reader.readFile(fichierCasting, em);
 			FilmDAO.linkFilmToActeurFromList(listeCasting, em);

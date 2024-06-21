@@ -41,7 +41,14 @@ public class Service {
 	}
 
 	private static void afficherCheminCourtEntre2Acteurs(EntityManager em) {
-		System.out.println("A venir : trouver le chemin le plus court entre deux acteurs ou actrices en utilisant l'Algorithme A*.");
+		String choix1 = saisieString("Saisissez le nom d'un acteur ou d'une actrice (ex : Faye Dunaway)");
+		String choix2 = saisieString("Saisissez le nom d'un acteur ou d'une actrice (ex : Alice Krige)");
+		try {
+			ActeurDAO.getShorterPathBetween2Acteurs(choix1, choix2, em);
+		} catch (DataMissingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private static void afficherActeursEnCommunA2Films(EntityManager em) {
@@ -68,7 +75,7 @@ public class Service {
 		String choix1 = saisieString("Saisissez le nom d'un acteur ou d'une actrice (ex : Craig Wasson)");
 		String choix2 = saisieString("Saisissez le nom d'un acteur ou d'une actrice (ex : Alice Krige)");
 		try {
-			FilmDAO.getFilmsBetween2Acteurs(choix1, choix2, em);
+			ActeurDAO.getShorterPathBetween2Acteurs(choix1, choix2, em);
 		} catch (DataMissingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
